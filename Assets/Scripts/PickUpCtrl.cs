@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PickUpCtrl : MonoBehaviour
 {
-    public CoinControl ctrl;
+    public UIControl ctrl;
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
@@ -12,7 +12,7 @@ public class PickUpCtrl : MonoBehaviour
         if (collision.gameObject.GetComponent<PlayerController>() != null)
         {
             Destroy(gameObject);
-            ctrl.score += 30;
+            ctrl.incrementScore(45);
         }
     }
 }

@@ -6,8 +6,7 @@ public class CoinControl : MonoBehaviour
 {
     public GameObject coinPrefab;
     public Transform[] coinSpawnPoints;
-
-    public int score = 0;
+    public UIControl ctrl;
 
     private int lastSpawn = -1;
 
@@ -26,14 +25,7 @@ public class CoinControl : MonoBehaviour
     {
         //GameObject coin = GameObject.FindGameObjectWithTag("Coin");
         //Object.Destroy(coin);
-        score += 15;
-        Debug.Log("Score: " + score);
-    }
-
-    public void bonus(int points)
-    {
-        score += points;
-        Debug.Log("Score: " + score);
+        ctrl.incrementScore(15);
     }
 
     int pickSpawnPlace()
@@ -43,10 +35,5 @@ public class CoinControl : MonoBehaviour
         lastSpawn = pick;
         Debug.Log(pick + " picked");
         return pick;
-    }
-
-    public void reset()
-    {
-        score = 0;
     }
 }

@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     public Transform groundCheck;
     public Transform spawnPoint;
     public Transform smug;
-    public CoinControl ctrl;
+    public UIControl ctrl;
 
     Animator anim;
 
@@ -39,6 +39,9 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Jump();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -68,7 +71,15 @@ public class PlayerController : MonoBehaviour
         else if (speed < 0 && facingRight)
             Turn();
 
-        if(transform.position.y < -25f || /*transform.position.x < -34f ||*/ isDead)
+        if (transform.position.y < -25f)
+        {
+            crossed = false;
+            isDead = !isDead;
+            bonusText = "";
+            ctrl.resetScore();
+        }
+
+        if (isDead)
         {
             rb.velocity = Vector2.zero;
             transform.position = spawnPoint.position;
@@ -106,8 +117,10 @@ public class PlayerController : MonoBehaviour
                 crossed = false;
                 isDead = !isDead;
                 bonusText = "";
+                ctrl.resetScore();
             }
         }
+        
     }
 
     //TODO: MOVE IT SOMEWHERE ELSE
@@ -128,11 +141,11 @@ public class PlayerController : MonoBehaviour
         if(crossed && transform.position.x > -29f)
         {
             bonusText = "I'm impressed, grab some bonus points.";
-            ctrl.bonus(100);
+            ctrl.incrementScore(150);
             crossed = !crossed;
         }
 
         GUI.Label(new Rect(0, 0, Screen.width, Screen.height), bonusText);
-        GUI.Label(new Rect(Screen.width - 150, 0, Screen.width, Screen.height), scoreText + ctrl.score);
+        //GUI.Label(new Rect(Screen.width - 150, 0, Screen.width, Screen.height), scoreText + ctrl.score);
     }
 }
