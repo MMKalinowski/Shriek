@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
         float speed = Input.GetAxis("Horizontal");
         anim.SetFloat("Speed", Mathf.Abs(speed));
         
-        rb.velocity = new Vector2(speed * maxSpeed, rb.velocity.y);
+        rb.velocity = new Vector2(speed * maxSpeed, rb.velocity.y); //if colliding with wall and airborne, clamp velocity between 0 and opposite its value?
 
         if (speed > 0 && !facingRight)
             Turn();
