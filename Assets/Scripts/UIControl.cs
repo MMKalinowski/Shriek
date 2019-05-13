@@ -9,6 +9,11 @@ public class UIControl : MonoBehaviour
 
     private int score = 0;
 
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     public void incrementScore(int i)
     {
         if(i > 0)

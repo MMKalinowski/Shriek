@@ -22,14 +22,28 @@ public class LaserController : MonoBehaviour
     private void FixedUpdate()
     {
         rb.velocity = dir * speed;
+
+        if (transform.position.x > 95)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(!collision.gameObject.CompareTag("pickup") && !collision.gameObject.CompareTag("Coin"))
         {
-            collision.gameObject.GetComponent<HandleDamage>().Hit();
-            Destroy(this);
+            if (collision.gameObject.GetComponent<HandleDamage>())
+            {
+                collision.gameObject.GetComponent<HandleDamage>().Hit();
+            }
+            if (collision.gameObject.GetComponent<HandleDamageEnemy>())
+            {
+                collision.gameObject.GetComponent<HandleDamageEnemy>().Hit();
+
+            }
+
+            Destroy(gameObject);
         }
     }
 }

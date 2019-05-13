@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -7,6 +8,8 @@ public class PlayerController : MonoBehaviour
     public float maxSpeed = 10f;
     public float jumpForce = 500f;
     public int life = 2;
+    public int killsBeforeAwakening = 2;
+    public int curentKills = 0;
     public Rigidbody2D laser; //laser prefab
 
     public LayerMask ground;
@@ -21,9 +24,8 @@ public class PlayerController : MonoBehaviour
     bool isDead = false;
     bool crossed = false;
     bool isColliding = false;
-    bool canShoot = true;
-
-    Collision2D prevCollision = null;
+    public bool canShoot = true;
+    bool inBoss = false;
 
     int rightFace = -1;
     uint jumpsLeft = 1;
@@ -44,14 +46,26 @@ public class PlayerController : MonoBehaviour
         anim = this.GetComponent<Animator>();
     }
 
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     void Update()
     {
+        if(curentKills >= killsBeforeAwakening && !inBoss)
+        {
+            inBoss = true;
+            SceneManager.LoadScene("boss");
+            transform.position = new Vector3(0,0,0);
+        }
+
         Jump();
 
         if (Input.GetKeyDown(KeyCode.Escape))
             Application.Quit();
 
-        if(Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightControl))
+        if((Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightControl)) && canShoot)
         {
             Shoot();
         }
@@ -59,15 +73,16 @@ public class PlayerController : MonoBehaviour
 
     void Shoot()
     {
+        Vector3 offset = new Vector3(2, 0, 0);
         if (facingRight)
         {
-            Rigidbody2D shot = Instantiate(laser, transform.position + new Vector3(1, 0, 0), transform.rotation);
+            Rigidbody2D shot = Instantiate(laser, transform.position + offset, transform.rotation);
             shot.velocity = LaserController.speed * new Vector2(1,0);
             shot.GetComponent<LaserController>().SetDir(new Vector2(1, 0));
         }
         else
         {
-            Rigidbody2D shot = Instantiate(laser, transform.position + new Vector3(-1, 0, 0), transform.rotation);
+            Rigidbody2D shot = Instantiate(laser, transform.position - offset, transform.rotation);
             shot.velocity = LaserController.speed * new Vector2(-1, 0);
             shot.GetComponent<LaserController>().SetDir(new Vector2(-1, 0));
         }
