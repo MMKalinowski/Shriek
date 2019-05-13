@@ -8,11 +8,11 @@ public class PickUpCtrl : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("collision detected");
         if (collision.gameObject.GetComponent<PlayerController>() != null)
         {
-            Destroy(gameObject);
             ctrl.incrementScore(45);
+            collision.gameObject.GetComponent<PlayerController>().GainLife();
+            Destroy(gameObject);
         }
     }
 }

@@ -6,6 +6,9 @@ public class PlayerController : MonoBehaviour
 {
     public float maxSpeed = 10f;
     public float jumpForce = 500f;
+    public int life = 2;
+    public Rigidbody2D laser; //laser prefab
+
     public LayerMask ground;
     public Transform groundCheck;
     public Transform spawnPoint;
@@ -17,6 +20,11 @@ public class PlayerController : MonoBehaviour
     bool facingRight = true;
     bool isDead = false;
     bool crossed = false;
+    bool isColliding = false;
+    bool canShoot = true;
+
+    Collision2D prevCollision = null;
+
     int rightFace = -1;
     uint jumpsLeft = 1;
 
@@ -42,6 +50,27 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
             Application.Quit();
+
+        if(Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightControl))
+        {
+            Shoot();
+        }
+    }
+
+    void Shoot()
+    {
+        if (facingRight)
+        {
+            Rigidbody2D shot = Instantiate(laser, transform.position + new Vector3(1, 0, 0), transform.rotation);
+            shot.velocity = LaserController.speed * new Vector2(1,0);
+            shot.GetComponent<LaserController>().SetDir(new Vector2(1, 0));
+        }
+        else
+        {
+            Rigidbody2D shot = Instantiate(laser, transform.position + new Vector3(-1, 0, 0), transform.rotation);
+            shot.velocity = LaserController.speed * new Vector2(-1, 0);
+            shot.GetComponent<LaserController>().SetDir(new Vector2(-1, 0));
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -63,8 +92,8 @@ public class PlayerController : MonoBehaviour
 
         float speed = Input.GetAxis("Horizontal");
         anim.SetFloat("Speed", Mathf.Abs(speed));
-        
-        rb.velocity = new Vector2(speed * maxSpeed, rb.velocity.y); //if colliding with wall and airborne, clamp velocity between 0 and opposite its value?
+
+        rb.velocity = new Vector2(speed * maxSpeed, rb.velocity.y);
 
         if (speed > 0 && !facingRight)
             Turn();
@@ -120,7 +149,28 @@ public class PlayerController : MonoBehaviour
                 ctrl.resetScore();
             }
         }
+        if (collision.gameObject.CompareTag("enemy_attack") || collision.gameObject.CompareTag("player_attack"))
+        {
+            LoseLife();
+            if(!(life > 0))
+            {
+                crossed = false;
+                isDead = !isDead;
+                bonusText = "";
+                ctrl.resetScore();
+            }
+        }
         
+    }
+
+    public void GainLife()
+    {
+        life++;
+    }
+
+    public void LoseLife()
+    {
+        life--;
     }
 
     //TODO: MOVE IT SOMEWHERE ELSE

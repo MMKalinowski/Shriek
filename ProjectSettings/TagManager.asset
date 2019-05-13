@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Coin
   - Enemy
+  - pickup
+  - enemy_attack
+  - player_attack
   layers:
   - Default
   - TransparentFX
@@ -18,8 +21,8 @@ TagManager:
   - Player
   - Enemy
   - Pickups
-  - 
-  - 
+  - player_attack
+  - attack
   - 
   - 
   - 
