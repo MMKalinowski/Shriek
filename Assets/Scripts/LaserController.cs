@@ -23,7 +23,7 @@ public class LaserController : MonoBehaviour
     {
         rb.velocity = dir * speed;
 
-        if (transform.position.x > 95)
+        if (Mathf.Abs(transform.position.x) > 95)
         {
             Destroy(gameObject);
         }

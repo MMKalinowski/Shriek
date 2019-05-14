@@ -75,8 +75,8 @@ public class PlayerController : MonoBehaviour
 
         Jump();
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-            SceneManager.LoadScene("intro");
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //    SceneManager.LoadScene("intro");
 
         if((Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightControl)) && canShoot)
         {
