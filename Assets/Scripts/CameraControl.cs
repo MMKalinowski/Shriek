@@ -20,6 +20,11 @@ public class CameraControl : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (SceneManager.GetActiveScene().name.Equals("end"))
+        {
+            Destroy(gameObject);
+        }
+
         if (SceneManager.GetActiveScene().name.Equals("boss") && !zoomedOut)
         {
             if (gameObject.GetComponent<Camera>())

@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     public Transform spawnPoint;
     public Transform smug;
     public UIControl ctrl;
+    public SFXHandler sfx;
 
     Animator anim;
 
@@ -59,9 +60,15 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (SceneManager.GetActiveScene().name.Equals("end"))
+        {
+            Destroy(gameObject);
+        }
+
         if(curentKills >= killsBeforeAwakening && !inBoss)
         {
             inBoss = true;
+            sfx.Play(SFXHandler.Clip.Shriek);
             SceneManager.LoadScene("boss");
             transform.position = new Vector3(0,0,0);
         }
@@ -69,7 +76,7 @@ public class PlayerController : MonoBehaviour
         Jump();
 
         if (Input.GetKeyDown(KeyCode.Escape))
-            Application.Quit();
+            SceneManager.LoadScene("intro");
 
         if((Input.GetKeyUp(KeyCode.LeftShift) || Input.GetKeyUp(KeyCode.RightControl)) && canShoot)
         {
@@ -92,6 +99,8 @@ public class PlayerController : MonoBehaviour
             shot.velocity = LaserController.speed * new Vector2(-1, 0);
             shot.GetComponent<LaserController>().SetDir(new Vector2(-1, 0));
         }
+
+        sfx.Play(SFXHandler.Clip.Laser);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -160,6 +169,7 @@ public class PlayerController : MonoBehaviour
 
             anim.SetBool("Air", true);
             currentJump = jumpForce;
+            sfx.Play(SFXHandler.Clip.Jump);
         }
     }
 
@@ -214,26 +224,29 @@ public class PlayerController : MonoBehaviour
     //TODO: MOVE IT SOMEWHERE ELSE
     private void OnGUI()
     {
-        if (transform.position.x < -34f && !crossed)
+        if (!SceneManager.GetActiveScene().name.Equals("boss"))
         {
-            bonusText = "Please don't go there.";
-        }
+            if (transform.position.x < -34f && !crossed)
+            {
+                bonusText = "Please don't go there.";
+            }
 
-        if (transform.position.x < -81f)
-        {
-            crossed = true;
-            bonusText = "Wow, well done, good luck getting back.";
-            smug.gameObject.SetActive(true);
-        }
+            if (transform.position.x < -81f)
+            {
+                crossed = true;
+                bonusText = "Wow, well done, good luck getting back.";
+                smug.gameObject.SetActive(true);
+            }
 
-        if(crossed && transform.position.x > -29f)
-        {
-            bonusText = "I'm impressed, grab some bonus points.";
-            ctrl.incrementScore(150);
-            crossed = !crossed;
-        }
+            if (crossed && transform.position.x > -29f)
+            {
+                bonusText = "I'm impressed, grab some bonus points.";
+                ctrl.incrementScore(150);
+                crossed = !crossed;
+            }
 
-        GUI.Label(new Rect(0, 0, Screen.width, Screen.height), bonusText);
-        //GUI.Label(new Rect(Screen.width - 150, 0, Screen.width, Screen.height), scoreText + ctrl.score);
+            GUI.Label(new Rect(0, 0, Screen.width, Screen.height), bonusText);
+            //GUI.Label(new Rect(Screen.width - 150, 0, Screen.width, Screen.height), scoreText + ctrl.score);
+        }
     }
 }
