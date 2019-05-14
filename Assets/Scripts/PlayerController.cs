@@ -44,6 +44,12 @@ public class PlayerController : MonoBehaviour
     {
         rb = this.GetComponent<Rigidbody2D>();
         anim = this.GetComponent<Animator>();
+
+        if (SceneManager.GetActiveScene().name.Equals("boss"))
+        {
+            spawnPoint = transform;
+            spawnPoint.position += new Vector3(0, 0, 0);
+        }
     }
 
     private void Awake()
@@ -115,7 +121,7 @@ public class PlayerController : MonoBehaviour
         else if (speed < 0 && facingRight)
             Turn();
 
-        if (transform.position.y < -25f)
+        if (transform.position.y < -25f || (SceneManager.GetActiveScene().name.Equals("boss") && transform.position.y < -15f))
         {
             crossed = false;
             isDead = !isDead;
@@ -123,10 +129,16 @@ public class PlayerController : MonoBehaviour
             ctrl.resetScore();
         }
 
-        if (isDead)
+        if (isDead && !SceneManager.GetActiveScene().name.Equals("boss"))
         {
             rb.velocity = Vector2.zero;
             transform.position = spawnPoint.position;
+            isDead = false;
+        }
+        else if (isDead)
+        {
+            rb.velocity = Vector2.zero;
+            transform.position = new Vector3(0, 0, 0);
             isDead = false;
         }
     }
@@ -175,7 +187,18 @@ public class PlayerController : MonoBehaviour
                 ctrl.resetScore();
             }
         }
-        
+        if (collision.gameObject.CompareTag("boss"))
+        {
+            LoseLife();
+            if (!(life > 0))
+            {
+                crossed = false;
+                isDead = !isDead;
+                bonusText = "";
+                ctrl.resetScore();
+            }
+        }
+
     }
 
     public void GainLife()

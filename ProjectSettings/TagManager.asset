@@ -9,6 +9,7 @@ TagManager:
   - pickup
   - enemy_attack
   - player_attack
+  - boss
   layers:
   - Default
   - TransparentFX
@@ -23,7 +24,7 @@ TagManager:
   - Pickups
   - player_attack
   - attack
-  - 
+  - boss
   - 
   - 
   - 

@@ -164,7 +164,7 @@ MonoBehaviour:
   jumpForce: 300
   ground:
     serializedVersion: 2
-    m_Bits: 311
+    m_Bits: 4919
   groundCheck: {fileID: 5222739095614058406}
   timeVar: 1
 --- !u!114 &937899052935766062
@@ -179,6 +179,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71cf61b8e397d4045b9c3ad36b51e377, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  life: 1
+  ui: {fileID: 0}
+  pc: {fileID: 0}
 --- !u!1 &5222739095614058401
 GameObject:
   m_ObjectHideFlags: 0
